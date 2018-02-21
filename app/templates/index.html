@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <table border=1>
+    <tr>
+      <th>Venue</th>
+      <th>Drive</th>
+      <th>Time</th>
+      <th>Signup</th>
+      <th>Notes</th>
+    </tr>
+    {% for event in events %}
+    <tr>
+      <td><a href='{{event.venue.website}}'>{{event.venue.name}}</a></td>
+      <td>{{event.venue.drive}}</td>
+      <td>{{event.event.start}} - {{event.event.end}}</td>
+      <td>{{event.event.adv_signup}}</td>
+      <td>{{event.event.notes}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  {% if not user.home_address %}
+  <p>Want drive times and adding events to your calendar? Then set up your <a href="{{ url_for('user', username=current_user.username)}}">profile!</a></p>
+  {% endif %}
+{% endblock %}
