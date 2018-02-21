@@ -1,4 +1,4 @@
-#The Jam
+# The Jam
 thejam is a web app that helps amateur musicians get more experience.
 
 This first version lets you see a list of open mic night events in your area
