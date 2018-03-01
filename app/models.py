@@ -30,6 +30,14 @@ class Venue(db.Model):
     def __repr__(self):
         return '<Venue {}>'.format(self.name)
 
+    def serialize(self):
+        return {
+            'id' : self.id,
+            'name' : self.name,
+            'address' : self.address,
+            'website' : self.website
+        }
+
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     night = db.Column(db.String(10),index=True)
@@ -41,7 +49,26 @@ class Event(db.Model):
     venue_id = db.Column(db.Integer, db.ForeignKey('venue.id'))
 
     def __repr__(self):
-        return '<Event {}>'.format(str(self.venue_id) + " " + self.night)
+        venue = Venue.query.get(self.venue_id)
+        return '<Event {}>'.format(str(venue.name) + " " + self.night)
+
+    def serialize(self):
+            venue = Venue.query.get(self.venue_id)
+            venue_ser = venue.serialize()
+            return {
+                'id' : self.id,
+                'night' : self.night,
+                'start_time' : self.start_time,
+                'end_time' : self.end_time,
+                'adv_signup' : self.adv_signup,
+                'notes' : self.notes,
+                'venue' : venue_ser,
+            }
+
+    def getAddress(self):
+        venue = Venue.query.get(self.venue_id)
+        address = venue.address
+        return address      
 
 @login.user_loader
 def load_user(id):

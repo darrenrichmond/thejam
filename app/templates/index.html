@@ -11,11 +11,11 @@
     </tr>
     {% for event in events %}
     <tr>
-      <td><a href='{{event.venue.website}}'>{{event.venue.name}}</a></td>
-      <td>{{event.venue.drive}}</td>
-      <td>{{event.event.start}} - {{event.event.end}}</td>
-      <td>{{event.event.adv_signup}}</td>
-      <td>{{event.event.notes}}</td>
+      <td><a href='{{event.venue.website}}'>{{event.venue.name}}</a> <a href="{{ url_for('edit_event', event_id=event.id)}}""><img src="{{url_for('static', filename='pencil.png')}}" alt="Edit this event" style="width:15px;height:15px;"></a></td>
+      <td>{{event.drive}}</td>
+      <td>{{event.start_time}} - {{event.end_time}}</td>
+      <td>{{event.adv_signup}}</td>
+      <td>{{event.notes}}</td>
     </tr>
     {% endfor %}
   </table>

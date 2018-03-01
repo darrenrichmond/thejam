@@ -10,6 +10,9 @@ db = SQLAlchemy(app)
 migrate = Migrate(app,db)
 login = LoginManager(app)
 login.login_view = 'login'
+#this was not in the falsk mega tutorial, but wa necessary to get site working
+#https://stackoverflow.com/questions/39908552/flask-loginexception-no-user-loader-has-been-installed-for-this-loginmanager
+login.init_app(app)
 
 from app import routes, models
 

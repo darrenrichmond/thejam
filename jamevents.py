@@ -1,39 +1,46 @@
-import requests, json, maya
+import requests, json, maya, user_calendar
+from app.models import Event, Venue
 import keys
 
 def getRawEvents():
-    events = [
-        {
-            'venue': {
-                'name': 'The Pigpen',
-                'address': '106 Pershing Ave, San Antonio, TX 78209',
-                'website': 'https://www.facebook.com/thepigpensa/'
+    
+    #Try to ge the events from the database
+    events = Event.query.all()
+
+    #If I didn't get any events, populate with hard-coded test data
+    if not events:
+        events = [
+            {
+                'venue': {
+                    'name': 'The Pigpen Test',
+                    'address': '106 Pershing Ave, San Antonio, TX 78209',
+                    'website': 'https://www.facebook.com/thepigpensa/'
+                },
+                'event': {
+                    'night': 'Tuesday',
+                    'recurs': 'weekly',
+                    'start': '7 pm',
+                    'end': '9 pm',
+                    'adv_signup': 'none', 
+                    'notes': 'My current favorite!'
+                }
             },
-            'event': {
-                'night': 'Tuesday',
-                'recurs': 'weekly',
-                'start': '7 pm',
-                'end': '9 pm',
-                'adv_signup': 'none', 
-                'notes': 'My current favorite!'
+            {
+                'venue': {
+                    'name': 'Big Bobs Burgers Test',
+                    'address': '447 W Hildebrand Ave Ste 107, San Antonio, Texas 78212',
+                    'website': 'https://www.facebook.com/bigbobsburger/'
+                },
+                'event': {
+                    'night': 'Wednesday',
+                    'recurs': 'weekly',
+                    'start': '7pm',
+                    'end': '10pm',
+                    'adv_signup': 'none', 
+                    'notes': 'Next one to try'
+                }
             }
-        },
-        {
-            'venue': {
-                'name': 'Big Bobs Burgers',
-                'address': '447 W Hildebrand Ave Ste 107, San Antonio, Texas 78212',
-                'website': 'https://www.facebook.com/bigbobsburger/'
-            },
-            'event': {
-                'night': 'Wednesday',
-                'recurs': 'weekly',
-                'start': '7pm',
-                'end': '10pm',
-                'adv_signup': 'none', 
-                'notes': 'Next one to try'
-            }
-        }
-    ]
+        ]
     return events
 
 #this is the core method to get the drive time to the event.
@@ -52,25 +59,31 @@ def getDriveDuration(start,end,departure_time=None):
     }
     r = requests.get(maps_api, params=payload)
     r_json = r.json()
-    duration = r_json['rows'][0]['elements'][0]['duration']['text']
+    print("Duration JSON")
+    print(r_json)
+    print('**************')
+    first_element = r_json['rows'][0]['elements'][0]
+    if 'duration' in first_element:
+        duration = first_element['duration']['text']
+    else:
+        duration = 'N/A'
     return duration
 
 def addDriveDuration(start_loc,event):
-    if start_loc is None:
-            event['venue']['drive'] = 'N/A'
-    else:
-        event_address = event['venue']['address']
+    event['drive'] = 'N/A'
+    event_address = event['venue']['address']
+    if start_loc and event_address:
         drive = getDriveDuration(start_loc,event_address)
-        event['venue']['drive'] = drive
+        event['drive'] = drive
     return event
-
-def enrichEvents(user,events):
-    #iterate over all the events, and add drive durations to each
-    for i, e in enumerate(events):
-        events[i] = addDriveDuration(user.home_address,e)
-    return events
-
 
 def getEvents(user):
     #get the raw events, then enrich them with calculated values
-    return enrichEvents(user, getRawEvents())
+    raw_events = getRawEvents()
+    enriched_events = []
+    for i, e in enumerate(raw_events):
+        serialized_event = e.serialize()
+        print(serialized_event)
+        enriched_event = addDriveDuration(user.home_address,serialized_event)
+        enriched_events.append(enriched_event)
+    return enriched_events

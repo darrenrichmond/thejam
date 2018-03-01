@@ -7,12 +7,16 @@
   {% endif %}
 </head>
 <body>
+  <h1>{{appname}}</h1>
+  <hr>
   <div>Go to: 
     <a href="{{ url_for('index')}}">Home</a>
      | 
      {% if current_user.is_anonymous %}
     <a href="{{ url_for('login')}}">Login</a>
     {% else %}
+    <a href="{{ url_for('create_event')}}">Create An Event</a>
+    |
     Welcome, <a href="{{ url_for('user', username=current_user.username)}}"> {{current_user.username}}</a> | <a href="{{ url_for('logout')}}">Logout</a>)
     {% endif %}
   </div>
@@ -26,7 +30,6 @@
   </ul>
   {% endif %}
   {% endwith %}
-  <h1>{{appname}}</h1>
   {% block content %}{% endblock %}
 </body>
 </html>

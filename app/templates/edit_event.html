@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Edit Event</h1>
+  <form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+      {{ form.venue_name.label}}: {{ form.venue_name(size=60) }}
+      {% for error in form.venue_name.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
+    </p>
+    <p>
+      {{ form.venue_address.label}}: {{ form.venue_address(size=110) }}
+      {% for error in form.venue_address.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
+    </p>
+    <p>
+      {{ form.venue_website.label}}: {{ form.venue_website(size=120) }}
+      {% for error in form.venue_name.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
+    </p>
+    <p>
+      {{ form.event_night.label}}: {{ form.event_night(size=80) }}
+      {% for error in form.event_night.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
+    </p>
+    <p>
+      {{ form.event_recurs.label}}: {{ form.event_recurs(size=30) }}
+      {% for error in form.event_recurs.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
+    </p>
+    <p>
+      {{ form.event_start.label}}: {{ form.event_start(size=8) }}
+      {% for error in form.event_start.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
+    </p>
+    <p>
+      {{ form.event_end.label}}: {{ form.event_end(size=8) }}
+      {% for error in form.event_end.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
+    </p>
+    <p>
+      {{ form.event_adv_signup.label}}: {{ form.event_adv_signup(size=8) }}
+      {% for error in form.event_adv_signup.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
+    </p>
+    <p>
+      {{ form.event_notes.label}}: {{ form.event_notes(size=128) }}
+      {% for error in form.event_notes.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
+    </p>
+    <p> {{ form.submit() }}
+  </form>
+{% endblock %}
